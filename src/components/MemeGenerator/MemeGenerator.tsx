@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import type { FormEvent } from 'react';
-import type { MemeObject } from '../types/MemeObject';
-import '../index.css';
+import type { MemeObject } from '../../types';
+import { MemeDisplay } from '../MemeDisplay';
+import { MemeTextOptions } from '../MemeTextOptions';
+import '../../index.css';
 
 export function MemeGenerator() {
   const [memes, setMemes] = useState<MemeObject[]>([]);
@@ -38,7 +40,7 @@ export function MemeGenerator() {
 
   return (
     <div style={styles.page}>
-      <h1 style={styles.title}>🎮 Meme Maker Game</h1>
+      <h1 style={styles.title}>Meme Maker Game</h1>
 
       <form onSubmit={handleGenerate} style={styles.form}>
         <button type="submit" style={styles.button}>
@@ -47,34 +49,20 @@ export function MemeGenerator() {
       </form>
 
       {randomMeme && (
-        <div style={styles.memeContainer}>
-          <div style={styles.imageWrapper}>
-            <img src={randomMeme} alt="Meme" style={styles.image} />
-            {selectedText && <h2 style={styles.topText}>{selectedText}</h2>}
-          </div>
-
-          <div style={styles.choices}>
-            {textOptions.map((text, i) => (
-              <button
-                key={i}
-                onClick={() => setSelectedText(text)}
-                style={{
-                  ...styles.choiceButton,
-                  background: selectedText === text ? '#2563eb' : '#e5e7eb',
-                  color: selectedText === text ? '#fff' : '#000',
-                }}
-              >
-                {text}
-              </button>
-            ))}
-          </div>
-        </div>
+        <>
+          <MemeDisplay memeUrl={randomMeme} selectedText={selectedText} />
+          <MemeTextOptions
+            options={textOptions}
+            selected={selectedText}
+            onSelect={setSelectedText}
+          />
+        </>
       )}
     </div>
   );
 }
 
-// styless
+// Styles (same as before)
 const styles: { [key: string]: React.CSSProperties } = {
   page: {
     minHeight: '100vh',
@@ -97,39 +85,5 @@ const styles: { [key: string]: React.CSSProperties } = {
     color: 'white',
     cursor: 'pointer',
   },
-  memeContainer: { display: 'flex', flexDirection: 'column', gap: 16 },
-  imageWrapper: { position: 'relative', textAlign: 'center' },
-  image: {
-    maxWidth: 600,
-    borderRadius: 8,
-    boxShadow: '0 5px 15px rgba(0,0,0,0.2)',
-  },
-  topText: {
-    position: 'absolute',
-    bottom: 10,
-    left: '50%',
-    transform: 'translateX(-50%)',
-    color: 'white',
-    fontSize: 32,
-    textTransform: 'uppercase',
-    textShadow: '2px 2px 5px black',
-    textAlign: 'center',
-    width: '90%',
-    padding: '0 10px',
-    wordWrap: 'break-word',
-  },
-  choices: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: 8,
-    maxWidth: 600,
-  },
-  choiceButton: {
-    border: 'none',
-    borderRadius: 6,
-    padding: '10px 12px',
-    fontSize: 16,
-    cursor: 'pointer',
-    transition: '0.2s',
-  },
 };
+
